@@ -1,3 +1,5 @@
+// http://bluh.org/code-the-diamond-square-algorithm/
+
 #include <iostream>
 #include <stdlib.h>
 #include <GL/glut.h>
@@ -16,7 +18,6 @@ void affiche_repere(void);
 
 void mouse(int, int, int, int);
 void mouseMotion(int, int);
-
 // variables globales pour OpenGL
 bool mouseLeftDown;
 bool mouseRightDown;
@@ -44,6 +45,8 @@ void triangle(rowvec a, rowvec b, rowvec c){
     glVertex3f(c(0), c(1), c(2));
     glEnd();
 }
+
+
 
 void initOpenGl()
 {
