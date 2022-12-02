@@ -3,11 +3,12 @@
 #include <GL/glut.h>
 #include <vector>
 #include <sstream>
-
-
+#include <armadillo>
 #include<string>
 
 using namespace std ;
+using namespace arma;
+
 void affichage(void);
 
 void clavier(unsigned char touche,int x,int y);
