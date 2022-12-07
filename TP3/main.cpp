@@ -38,6 +38,67 @@ float low_shininess = 5.0f;
 float high_shininess = 100.0f;
 float mat_emission[] = {0.3f, 0.2f, 0.2f, 0.0f};
 
+void sampleSquare(int x, int y, int size, double value)
+{
+    int hs = size / 2;
+
+    // a     b 
+    //
+    //    x
+    //
+    // c     d
+
+    double a = sample(x - hs, y - hs);
+    double b = sample(x + hs, y - hs);
+    double c = sample(x - hs, y + hs);
+    double d = sample(x + hs, y + hs);
+
+    setSample(x, y, ((a + b + c + d) / 4.0) + value);
+
+}
+
+void sampleDiamond(int x, int y, int size, double value)
+{
+    int hs = size / 2;
+
+    //   c
+    //
+    //a  x  b
+    //
+    //   d
+
+    double a = sample(x - hs, y);
+    double b = sample(x + hs, y);
+    double c = sample(x, y - hs);
+    double d = sample(x, y + hs);
+
+    setSample(x, y, ((a + b + c + d) / 4.0) + value);
+}
+
+void DiamondSquare(int stepsize, double scale)
+{
+
+    int halfstep = stepsize / 2;
+
+    for (int y = halfstep; y < h + halfstep; y += stepsize)
+    {
+        for (int x = halfstep; x < w + halfstep; x += stepsize)
+        {
+            sampleSquare(x, y, stepsize, frand() * scale);
+        }
+    }
+
+    for (int y = 0; y < h; y += stepsize)
+    {
+        for (int x = 0; x < w; x += stepsize)
+        {
+            sampleDiamond(x + halfstep, y, stepsize, frand() * scale);
+            sampleDiamond(x, y + halfstep, stepsize, frand() * scale);
+        }
+    }
+
+}
+
 void triangle(rowvec a, rowvec b, rowvec c){
     glBegin(GL_TRIANGLES);
     glVertex3f(a(0), a(1), a(2));
