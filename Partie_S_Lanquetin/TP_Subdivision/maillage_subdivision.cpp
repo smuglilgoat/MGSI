@@ -38,13 +38,13 @@ MaillageSubdivision::MaillageSubdivision
 ///////////////////////////////////////////////////////////////////////////////
 //-----------------------------------------------------------------------------
 //
-// méthodes de subdivision sur des maillages quelconques
+// mï¿½thodes de subdivision sur des maillages quelconques
 //
 //-----------------------------------------------------------------------------
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-// étape de subdivision - méthode de Doo-Sabin
+// ï¿½tape de subdivision - mï¿½thode de Doo-Sabin
 ///////////////////////////////////////////////////////////////////////////////
 typedef ULONG int4[4];
 
@@ -59,14 +59,14 @@ void MaillageSubdivision::subdivision_doo_sabin()
 	nb_nf = nb_sommet + nb_arete + nb_face;
 
 	////-----------------------------------------------------------------------
-	//// création des nouveaux sommets
-	//// pour chaque face, un sommet est créé pour chaque sommet de la face
-	//// pour chaque arete externe, deux sommets supplémentaires sont créés
+	//// crï¿½ation des nouveaux sommets
+	//// pour chaque face, un sommet est crï¿½ï¿½ pour chaque sommet de la face
+	//// pour chaque arete externe, deux sommets supplï¿½mentaires sont crï¿½ï¿½s
 	//// pour chaque face avec n sommets, un tableau SF des indices des 
-	////  nouveaux sommets est créé : 
+	////  nouveaux sommets est crï¿½ï¿½ : 
 	////  SF[0] SF[1] ... SF[n-1] donnera une nouvelle face avec n sommets
 	//// pour chaque arete, les indices des quatre nouveaux sommets sont
-	////  conservés dans le tableau SA :
+	////  conservï¿½s dans le tableau SA :
 	////   SA[iA][0] et SA[iA][1] : nouveaux sommets de la face1
 	////   SA[iA][2] et SA[iA][3] : nouveaux sommets de la face2
 	////   SA[iA][0] SA[iA][1] SA[iA][2] SA[iA][3] donnera une face
@@ -91,15 +91,15 @@ void MaillageSubdivision::subdivision_doo_sabin()
 		cerr << "MaillageSubdivision::subdivision_doo_sabin" 
 		     << " - memoire insuffissante " << endl;
 	}
-	numerotation_elements(); // (re)numeroter les elements à partir de 0
+	numerotation_elements(); // (re)numeroter les elements ï¿½ partir de 0
 	
 	k=0;
 	for (PtrFace f1 = f_first; f1 != FACE_NONE; f1 = f1->suiv)
 	{
 		int n = f1->nb_sommets(); // sommets de la face f1
-		Point3D Sf1_coord[n];     // coordonnées de ces sommets
+		Point3D Sf1_coord[n];     // coordonnï¿½es de ces sommets
 		
-		// créer le tableau SF
+		// crï¿½er le tableau SF
 		ULONG *SF;
 		try {
 			SF = new ULONG[n];
@@ -109,7 +109,7 @@ void MaillageSubdivision::subdivision_doo_sabin()
 			cerr << "MaillageSubdivision::subdivision_doo_sabin" 
 			     << " - memoire insuffissante " << endl;
 		}
-		f1->marque((ULONG)SF);   // lier le tableau SF à la face f1
+		f1->marque((ULONG)SF);   // lier le tableau SF ï¿½ la face f1
 		lSommets lsf1=f1->sommets();
 		lSommets::iterator ilsf1=lsf1.begin();
 		for (int i=0; i<n; i++) 
@@ -118,7 +118,7 @@ void MaillageSubdivision::subdivision_doo_sabin()
 			Sf1_coord[i] = (*ilsf1)->coord(); ilsf1++;
 		}
 		
-		// calcul des coordonnées des n nouveaux sommets
+		// calcul des coordonnï¿½es des n nouveaux sommets
 		double alpha[n]; // coefficients pour les combinaisons
 		alpha[0] = 0.25 + 1.25/n;
 		for (int i=1; i<n; i++) 
@@ -139,7 +139,7 @@ void MaillageSubdivision::subdivision_doo_sabin()
 		}
 		
 				
-		// lier chaque couple de nouveaux sommets à l'arete correspondante
+		// lier chaque couple de nouveaux sommets ï¿½ l'arete correspondante
 		lAretes laf1 = f1->aretes();
 		lAretes::iterator ilaf1 = laf1.begin();
 		for (int i=0; i<n; i++) 
@@ -160,12 +160,12 @@ void MaillageSubdivision::subdivision_doo_sabin()
 		}		
 	}
 	
-	// créer pour chaque arete externe, deux sommets supplémentaires
+	// crï¿½er pour chaque arete externe, deux sommets supplï¿½mentaires
 	for (PtrArete a1 = a_first; a1 != ARETE_NONE; a1 = a1->suiv)
 	if (a1->estExterne)
 	{
 		int ia1 = a1->num;
-		// coordonnées des deux nouveaux sommets - schéma de Chaikin
+		// coordonnï¿½es des deux nouveaux sommets - schï¿½ma de Chaikin
 		Point3D S1a1 = a1->sommet1()->coord();
 		Point3D S2a1 = a1->sommet2()->coord();
 		Point3D Sn1 = (3.0*S1a1+S2a1)/4.0;
@@ -206,7 +206,7 @@ void MaillageSubdivision::subdivision_doo_sabin()
 // }
 
 	////-----------------------------------------------------------------------
-	//// création des tableaux des nouvelles faces 
+	//// crï¿½ation des tableaux des nouvelles faces 
 	
 	// taille du tableau T :
 	// somme_face degre(face)                         + 
@@ -244,7 +244,7 @@ void MaillageSubdivision::subdivision_doo_sabin()
 
 	TS[0] = 0;
 	
-	// création des nouvelles faces correspondant aux faces
+	// crï¿½ation des nouvelles faces correspondant aux faces
 	for (PtrFace f1 = f_first; f1 != FACE_NONE; f1 = f1->suiv)
 	{
 		ULONG *SF = (ULONG *)(f1->marque()); 
@@ -254,7 +254,7 @@ void MaillageSubdivision::subdivision_doo_sabin()
 		TS[kTS+1] = TS[kTS]+n; kTS++;
 	}
 	
-	// création des nouvelles faces quadrangulaires correspondant aux aretes
+	// crï¿½ation des nouvelles faces quadrangulaires correspondant aux aretes
 	for (int i=0; i<nb_arete; i++)
 	{
 		for (int j=0; j<4; j++)
@@ -262,17 +262,17 @@ void MaillageSubdivision::subdivision_doo_sabin()
 		TS[kTS+1] = TS[kTS]+4; kTS++;
 	}
 	
-	// création des nouvelles faces correspondant aux sommets
+	// crï¿½ation des nouvelles faces correspondant aux sommets
 	for (PtrSommet s1=s_first; s1!=SOMMET_NONE; s1=s1->suiv)
 	{
-		lAretes las1 = s1->aretes(); // aretes incidentes à s1
+		lAretes las1 = s1->aretes(); // aretes incidentes ï¿½ s1
 		lAretes::iterator ilas1 = las1.begin();
 		PtrArete a1;
 		int n=0;
 		if (s1->estExterne)
 		{
-			// un sommet supplémentaire pour la face correspondant
-			// à un sommet s1 externe
+			// un sommet supplï¿½mentaire pour la face correspondant
+			// ï¿½ un sommet s1 externe
 			a1=*ilas1;
 			T[kT++] = SA[a1->num][a1->sommet1()==s1 ? 2 : 0];
 			n++;
@@ -318,10 +318,10 @@ void MaillageSubdivision::subdivision_doo_sabin()
 
 	//// modification de la structure ////
 	
-	// destruction des éléments existants
+	// destruction des ï¿½lï¿½ments existants
 	supprimer_elements();
 	
-	// création des nouveaux éléments 
+	// crï¿½ation des nouveaux ï¿½lï¿½ments 
 	creer(Scoord, nb_ns, T, TS, nb_nf);
 	
 	delete[] Scoord;
@@ -331,7 +331,7 @@ void MaillageSubdivision::subdivision_doo_sabin()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// étape de subdivision - méthode de Catmull-Clark
+// ï¿½tape de subdivision - mï¿½thode de Catmull-Clark
 ///////////////////////////////////////////////////////////////////////////////
 void MaillageSubdivision::subdivision_catmull_clark()
 {
@@ -345,31 +345,31 @@ void MaillageSubdivision::subdivision_catmull_clark()
 	nb_nf = 2*nb_arete - nb_s_externes();
 	
 	////-----------------------------------------------------------------------
-	//// création des nouveaux sommets
-	//// chaque nouveau sommet d'indice k est lié à l'élément existant
+	//// crï¿½ation des nouveaux sommets
+	//// chaque nouveau sommet d'indice k est liï¿½ ï¿½ l'ï¿½lï¿½ment existant
 	//// au moyen de sa marque
 	ULONG k;
 	
-	// création d'un nouveau sommet pour chaque sommet 
-	// indice de 0 à nb_sommet-1
+	// crï¿½ation d'un nouveau sommet pour chaque sommet 
+	// indice de 0 ï¿½ nb_sommet-1
 	k = 0;
 	for (PtrSommet s1 = s_first; s1 != SOMMET_NONE; s1 = s1->suiv)
 		s1->marque(k++); 
 		
-	// création d'un nouveau sommet pour chaque arete
-	// indice de nb_sommet à nb_sommet+nb_arete-1
+	// crï¿½ation d'un nouveau sommet pour chaque arete
+	// indice de nb_sommet ï¿½ nb_sommet+nb_arete-1
 	k = nb_sommet;
 	for (PtrArete a1 = a_first; a1 != ARETE_NONE; a1 = a1->suiv)
 		a1->marque(k++); 
 		
-	// création d'un nouveau sommet pour chaque face
-	// indice de nb_sommet+nb_arete à nb_sommet+nb_arete+nb_face-1
+	// crï¿½ation d'un nouveau sommet pour chaque face
+	// indice de nb_sommet+nb_arete ï¿½ nb_sommet+nb_arete+nb_face-1
 	k = nb_sommet+nb_arete;
 	for (PtrFace f1 = f_first; f1 != FACE_NONE; f1 = f1->suiv)
 		f1->marque(k++); 
 		
 	////-----------------------------------------------------------------------
-	//// création du tableau des coordonnées des sommets 
+	//// crï¿½ation du tableau des coordonnï¿½es des sommets 
 	Point3D *Scoord;
 	try {
 		Scoord = new Point3D[nb_ns];
@@ -381,14 +381,14 @@ void MaillageSubdivision::subdivision_catmull_clark()
 		exit(1);
 	}
 	
-	// coordonnées des nouveaux sommets correspondants aux faces existantes 	
+	// coordonnï¿½es des nouveaux sommets correspondants aux faces existantes 	
 	for (PtrFace f1 = f_first; f1 != FACE_NONE; f1 = f1->suiv)
 	{
 		k = f1->marque();
 		Scoord[k] = f1->barycentre();
 	}
 	
-	// coordonnées des nouveaux sommets correspondants aux aretes existantes 	
+	// coordonnï¿½es des nouveaux sommets correspondants aux aretes existantes 	
 	for (PtrArete a1 = a_first; a1 != ARETE_NONE; a1 = a1->suiv)
 	{
 		Point3D C;
@@ -415,7 +415,7 @@ void MaillageSubdivision::subdivision_catmull_clark()
 		Scoord[k] = C;
 	}
 	
-	// coordonnées des nouveaux sommets correspondants aux sommets existants 	
+	// coordonnï¿½es des nouveaux sommets correspondants aux sommets existants 	
 	for (PtrSommet s1 = s_first; s1 != SOMMET_NONE; s1 = s1->suiv)
 	{
 		Point3D C;
@@ -455,8 +455,8 @@ void MaillageSubdivision::subdivision_catmull_clark()
 			Q /= n;
 			
 			// calcul du nouveau sommet
-//			C = (Q+2*R+(n-3)*S)/n; // maillage quelconque		   
-			C = (Q+2*R+S)/4;       // maillage quadrangle régulier		   
+			C = (Q+2*R+(n-3)*S)/n; // maillage quelconque		   
+//			C = (Q+2*R+S)/4;       // maillage quadrangle rï¿½gulier		   
 		}
 		k = s1->marque(); 
 		Scoord[k] = C;
@@ -470,7 +470,7 @@ void MaillageSubdivision::subdivision_catmull_clark()
 
 	
 	////-----------------------------------------------------------------------
-	//// création des tableaux des nouvelles faces (quadrangulaires)
+	//// crï¿½ation des tableaux des nouvelles faces (quadrangulaires)
 	int tailleT = 4*nb_nf;
 	ULONG *T;
 	ULONG *TS;
@@ -500,7 +500,7 @@ void MaillageSubdivision::subdivision_catmull_clark()
 	for (PtrFace f1 = f_first; f1 != FACE_NONE; f1 = f1->suiv)
 	{
 		lAretes laf1 = f1->aretes(); // aretes de la face f1
-		// indice du nouveau sommet correspondant à f1
+		// indice du nouveau sommet correspondant ï¿½ f1
 		ULONG isf1 = f1->marque(); 
 		lAretes::iterator i1 = laf1.begin(); 
 		lAretes::iterator i2=i1; i2++;
@@ -509,19 +509,19 @@ void MaillageSubdivision::subdivision_catmull_clark()
 			if (i2==laf1.end()) i2=laf1.begin();
 			PtrArete a1 = *i1;
 			PtrArete a2 = *i2;
-			// indice du nouveau sommet correspondant à a1
+			// indice du nouveau sommet correspondant ï¿½ a1
 			ULONG isa1 = a1->marque();
-			// indice du nouveau sommet correspondant à a2
+			// indice du nouveau sommet correspondant ï¿½ a2
 			ULONG isa2 = a2->marque();
 			
-			// sommet commun à a1 et a2
+			// sommet commun ï¿½ a1 et a2
 			PtrSommet s12;
 			s12 = (a1->face1() == f1 ? a1->sommet2() : a1->sommet1());
 			
-			// indice du nouveau sommet correspondant à s12
+			// indice du nouveau sommet correspondant ï¿½ s12
 			ULONG iss12 = s12->marque();
 			
-			// création d'une nouvelle face quadrangulaire
+			// crï¿½ation d'une nouvelle face quadrangulaire
 			TS[kTS+1] = TS[kTS]+4; kTS++;
 			T[kT++] = isf1;
 			T[kT++] = isa1;
@@ -542,10 +542,10 @@ void MaillageSubdivision::subdivision_catmull_clark()
 	
 	//// modification de la structure ////
 	
-	// destruction des éléments existants
+	// destruction des ï¿½lï¿½ments existants
 	supprimer_elements();
 	
-	// création des nouveaux éléments 
+	// crï¿½ation des nouveaux ï¿½lï¿½ments 
 	creer(Scoord, nb_ns, T, TS, nb_nf);
 
 	delete[] Scoord;
@@ -556,8 +556,8 @@ void MaillageSubdivision::subdivision_catmull_clark()
 ///////////////////////////////////////////////////////////////////////////////
 // subdivision Mid-Edge :
 // - chaque arete donne un nouveau sommet
-// - chaque face de degré n donne une face de degré n 
-// - chaque sommet de degré n>=3 donne une face de degré n 
+// - chaque face de degrï¿½ n donne une face de degrï¿½ n 
+// - chaque sommet de degrï¿½ n>=3 donne une face de degrï¿½ n 
 ///////////////////////////////////////////////////////////////////////////////
 void MaillageSubdivision::subdivision_midedge()
 {
@@ -572,19 +572,19 @@ void MaillageSubdivision::subdivision_midedge()
 	if (s1->nb_sommets() >= 3) nb_nf++;
 	
 	////-----------------------------------------------------------------------
-	//// création des nouveaux sommets
-	//// chaque nouveau sommet d'indice k est lié à l'élément existant
+	//// crï¿½ation des nouveaux sommets
+	//// chaque nouveau sommet d'indice k est liï¿½ ï¿½ l'ï¿½lï¿½ment existant
 	//// au moyen de sa marque
 	ULONG k;
 	
-	// création d'un nouveau sommet pour chaque arete
-	// indice de 0 à nb_arete-1
+	// crï¿½ation d'un nouveau sommet pour chaque arete
+	// indice de 0 ï¿½ nb_arete-1
 	k = 0;
 	for (PtrArete a1 = a_first; a1 != ARETE_NONE; a1 = a1->suiv)
 		a1->marque(k++); 
 		
 	////-----------------------------------------------------------------------
-	//// création du tableau des coordonnées des sommets 
+	//// crï¿½ation du tableau des coordonnï¿½es des sommets 
 	Point3D *Scoord;
 	try {
 		Scoord = new Point3D[nb_ns];
@@ -596,7 +596,7 @@ void MaillageSubdivision::subdivision_midedge()
 		exit(1);
 	}
 	
-	// coordonnées des nouveaux sommets correspondants aux aretes existantes 	
+	// coordonnï¿½es des nouveaux sommets correspondants aux aretes existantes 	
 	for (PtrArete a1 = a_first; a1 != ARETE_NONE; a1 = a1->suiv)
 	{
 		k = a1->marque();
@@ -604,9 +604,9 @@ void MaillageSubdivision::subdivision_midedge()
 	}
 	
 	////-----------------------------------------------------------------------
-	//// création des tableaux des nouvelles faces 
+	//// crï¿½ation des tableaux des nouvelles faces 
 
-	// calculer la somme des degrés des nouvelles faces
+	// calculer la somme des degrï¿½s des nouvelles faces
 	ULONG tailleT = 0;
 	for (PtrFace f1 = f_first; f1 != FACE_NONE; f1 = f1->suiv)
 		tailleT += f1->nb_sommets();
@@ -640,12 +640,12 @@ void MaillageSubdivision::subdivision_midedge()
 
 	TS[0] = 0;
 	
-	// pour chaque face existante, créer une nouvelle face
+	// pour chaque face existante, crï¿½er une nouvelle face
 	for (PtrFace f1 = f_first; f1 != FACE_NONE; f1 = f1->suiv)
 	{
 		lAretes laf1 = f1->aretes();
 		
-		// créer la face dont les sommets sont les milieux des aretes
+		// crï¿½er la face dont les sommets sont les milieux des aretes
 		for (lAretes::iterator i1 = laf1.begin(); i1!=laf1.end(); i1++)
 		{
 			PtrArete a1 = *i1;
@@ -654,13 +654,13 @@ void MaillageSubdivision::subdivision_midedge()
 		TS[kTS+1] = TS[kTS]+f1->nb_aretes(); kTS++;
 	}
 	
-	// pour chaque sommet de degré >= 3, créer une nouvelle face 
+	// pour chaque sommet de degrï¿½ >= 3, crï¿½er une nouvelle face 
 	for (PtrSommet s1 = s_first; s1 != SOMMET_NONE; s1 = s1->suiv)
 	if (s1->nb_sommets() >= 3) 
 	{
 		lAretes las1 = s1->aretes();
 		
-		// créer la face dont les sommets sont les milieux des aretes
+		// crï¿½er la face dont les sommets sont les milieux des aretes
 		for (lAretes::iterator i1 = las1.begin(); i1!=las1.end(); i1++)
 		{
 			PtrArete a1 = *i1;
@@ -692,10 +692,10 @@ void MaillageSubdivision::subdivision_midedge()
 	////-----------------------------------------------------------------------
 	//// modification de la structure 
 	
-	// destruction des éléments existants
+	// destruction des ï¿½lï¿½ments existants
 	supprimer_elements();
 	
-	// création des nouveaux éléments 
+	// crï¿½ation des nouveaux ï¿½lï¿½ments 
 	creer(Scoord, nb_ns, T, TS, nb_nf);
 		
 	delete[] Scoord;
@@ -706,13 +706,13 @@ void MaillageSubdivision::subdivision_midedge()
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 //
-// routines spécifiques pour des maillages triangulaires
+// routines spï¿½cifiques pour des maillages triangulaires
 //
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-// récuperer les 3 aretes de la face triangulaire f
+// rï¿½cuperer les 3 aretes de la face triangulaire f
 ///////////////////////////////////////////////////////////////////////////////
 void aretes_triangle(PtrFace f, PtrArete &a1, PtrArete &a2, PtrArete &a3)
 {
@@ -725,7 +725,7 @@ void aretes_triangle(PtrFace f, PtrArete &a1, PtrArete &a2, PtrArete &a3)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// récuperer les 3 sommets de la face triangulaire f
+// rï¿½cuperer les 3 sommets de la face triangulaire f
 ///////////////////////////////////////////////////////////////////////////////
 void sommets_triangle(PtrFace f, PtrSommet &s1, PtrSommet &s2, PtrSommet &s3)
 {
@@ -738,7 +738,7 @@ void sommets_triangle(PtrFace f, PtrSommet &s1, PtrSommet &s2, PtrSommet &s3)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// pour l'arete a1, trouver le sommet oppose par rapport à la face nf (1 ou 2)
+// pour l'arete a1, trouver le sommet oppose par rapport ï¿½ la face nf (1 ou 2)
 ///////////////////////////////////////////////////////////////////////////////
 PtrSommet sommet_oppose(PtrArete a1, int nf)
 {
@@ -756,7 +756,7 @@ PtrSommet sommet_oppose(PtrArete a1, int nf)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// pour l'arete a1, trouver le sommet oppose par rapport à la face f1
+// pour l'arete a1, trouver le sommet oppose par rapport ï¿½ la face f1
 ///////////////////////////////////////////////////////////////////////////////
 PtrSommet sommet_oppose(PtrArete a1, PtrFace f1)
 {
@@ -772,7 +772,7 @@ PtrSommet sommet_oppose(PtrArete a1, PtrFace f1)
 ///////////////////////////////////////////////////////////////////////////////
 //-----------------------------------------------------------------------------
 //
-// méthodes de subdivision sur des maillages triangulaires
+// mï¿½thodes de subdivision sur des maillages triangulaires
 //
 //-----------------------------------------------------------------------------
 ///////////////////////////////////////////////////////////////////////////////
@@ -786,7 +786,7 @@ PtrSommet sommet_oppose(PtrArete a1, PtrFace f1)
 void MaillageSubdivision::subdivision_sqrt3()
 {
 	////-----------------------------------------------------------------------
-	// tester la triangularité
+	// tester la triangularitï¿½
 	if (!n_angulaire(3))
 	{
 		cerr << "MaillageSubdivision::subdivision_sqrt3() :";
@@ -804,32 +804,32 @@ void MaillageSubdivision::subdivision_sqrt3()
 	nb_nf = 2*nb_arete; 
 	
 	////-----------------------------------------------------------------------
-	//// création des nouveaux sommets
-	//// chaque nouveau sommet d'indice k est lié à l'élément existant
+	//// crï¿½ation des nouveaux sommets
+	//// chaque nouveau sommet d'indice k est liï¿½ ï¿½ l'ï¿½lï¿½ment existant
 	//// au moyen de sa marque
 	ULONG k;
 	
-	// création d'un nouveau sommet pour chaque sommet 
-	// indice de 0 à nb_sommet-1
+	// crï¿½ation d'un nouveau sommet pour chaque sommet 
+	// indice de 0 ï¿½ nb_sommet-1
 	k = 0;
 	for (PtrSommet s1 = s_first; s1 != SOMMET_NONE; s1 = s1->suiv)
 		s1->marque(k++); 
 		
-	// création d'un nouveau sommet pour chaque face
-	// indice de nb_sommet à nb_sommet+nb_face-1
+	// crï¿½ation d'un nouveau sommet pour chaque face
+	// indice de nb_sommet ï¿½ nb_sommet+nb_face-1
 	k = nb_sommet;
 	for (PtrFace f1 = f_first; f1 != FACE_NONE; f1 = f1->suiv)
 		f1->marque(k++); 
 		
-	// création d'un nouveau sommet pour chaque arete externe 
-	// indice de nb_sommet+nb_face à nb_sommet+nb_face+nb_s_externes()-1
+	// crï¿½ation d'un nouveau sommet pour chaque arete externe 
+	// indice de nb_sommet+nb_face ï¿½ nb_sommet+nb_face+nb_s_externes()-1
 	k = nb_sommet+nb_face;
 	for (PtrArete a1 = a_first; a1 != ARETE_NONE; a1 = a1->suiv)
 	if (a1->estExterne)
 		a1->marque(k++); 
 		
 	////-----------------------------------------------------------------------
-	//// création du tableau des coordonnées des sommets 
+	//// crï¿½ation du tableau des coordonnï¿½es des sommets 
 	Point3D *Scoord;
 	try {
 		Scoord = new Point3D[nb_ns];
@@ -841,13 +841,13 @@ void MaillageSubdivision::subdivision_sqrt3()
 		exit(1);
 	}
 		
-	// coordonnées des nouveaux sommets correspondants aux sommets existants 	
+	// coordonnï¿½es des nouveaux sommets correspondants aux sommets existants 	
 	for (PtrSommet s1 = s_first; s1 != SOMMET_NONE; s1 = s1->suiv)
 	{
 		k = s1->marque();
 		if (s1->estExterne)
 		{
-			// schéma Catmull-Clark
+			// schï¿½ma Catmull-Clark
 			PtrSommet s11 = s1->sommet_adjacent_initial();
 			PtrSommet s12 = s1->sommet_adjacent_final();
 			Scoord[k] = (6*s1->coord()+s11->coord()+s12->coord())/8;
@@ -864,7 +864,7 @@ void MaillageSubdivision::subdivision_sqrt3()
 		}
 	}
 	
-	// coordonnées des nouveaux sommets correspondants aux milieux des faces 	
+	// coordonnï¿½es des nouveaux sommets correspondants aux milieux des faces 	
 	for (PtrFace f1 = f_first; f1 != FACE_NONE; f1 = f1->suiv)
 	{
 		k = f1->marque();
@@ -879,7 +879,7 @@ void MaillageSubdivision::subdivision_sqrt3()
 	}
 
 	////-----------------------------------------------------------------------
-	//// création des tableaux des nouvelles faces (toutes triangulaires)
+	//// crï¿½ation des tableaux des nouvelles faces (toutes triangulaires)
 	int tailleT = 3*nb_nf;
 	ULONG *T;
 	ULONG *TS;
@@ -907,7 +907,7 @@ void MaillageSubdivision::subdivision_sqrt3()
 
 	TS[0] = 0;
 	
-	// pour chaque arete, créer deux nouvelles faces 
+	// pour chaque arete, crï¿½er deux nouvelles faces 
 	for (PtrArete a1 = a_first; a1 != ARETE_NONE; a1 = a1->suiv)
 	{
 		PtrSommet s1 = a1->sommet1(); ULONG is1 = s1->marque();
@@ -919,17 +919,17 @@ void MaillageSubdivision::subdivision_sqrt3()
 			ULONG ia1 = a1->marque();
 			if (f1 != FACE_NONE)
 			{
-				// face f1 existante : créer deux nouvelles faces
+				// face f1 existante : crï¿½er deux nouvelles faces
 				// [is1,ia1,if1] et [ia1,is2,if1]			
 				ULONG if1 = f1->marque();				
 
-				// création d'une nouvelle face triangulaire
+				// crï¿½ation d'une nouvelle face triangulaire
 				T[kT++] = is1;
 				T[kT++] = ia1;
 				T[kT++] = if1;
 				TS[kTS+1] = TS[kTS]+3; kTS++;
 
-				// création d'une nouvelle face triangulaire
+				// crï¿½ation d'une nouvelle face triangulaire
 				T[kT++] = ia1;
 				T[kT++] = is2;
 				T[kT++] = if1;
@@ -937,17 +937,17 @@ void MaillageSubdivision::subdivision_sqrt3()
 			}
 			else
 			{
-				// face f2 existante : créer deux nouvelles faces
+				// face f2 existante : crï¿½er deux nouvelles faces
 				// [ia1,is1,if2] et [is2,ia1,if2]			
 				ULONG if2 = f2->marque();				
 
-				// création d'une nouvelle face triangulaire
+				// crï¿½ation d'une nouvelle face triangulaire
 				T[kT++] = ia1;
 				T[kT++] = is1;
 				T[kT++] = if2;
 				TS[kTS+1] = TS[kTS]+3; kTS++;
 
-				// création d'une nouvelle face triangulaire
+				// crï¿½ation d'une nouvelle face triangulaire
 				T[kT++] = is2;
 				T[kT++] = ia1;
 				T[kT++] = if2;
@@ -956,17 +956,17 @@ void MaillageSubdivision::subdivision_sqrt3()
 		} // fin cas a1->estExterne
 		else
 		{
-			// créer deux faces [is1,if2,if1] et [is2,if1,if2]
+			// crï¿½er deux faces [is1,if2,if1] et [is2,if1,if2]
 			ULONG if1 = f1->marque();				
 			ULONG if2 = f2->marque();	
 						
-			// création d'une nouvelle face triangulaire
+			// crï¿½ation d'une nouvelle face triangulaire
 			T[kT++] = is1;
 			T[kT++] = if2;
 			T[kT++] = if1;
 			TS[kTS+1] = TS[kTS]+3; kTS++;
 
-			// création d'une nouvelle face triangulaire
+			// crï¿½ation d'une nouvelle face triangulaire
 			T[kT++] = is2;
 			T[kT++] = if1;
 			T[kT++] = if2;
@@ -997,10 +997,10 @@ void MaillageSubdivision::subdivision_sqrt3()
 	////-----------------------------------------------------------------------
 	//// modification de la structure 
 	
-	// destruction des éléments existants
+	// destruction des ï¿½lï¿½ments existants
 	supprimer_elements();
 	
-	// création des nouveaux éléments 
+	// crï¿½ation des nouveaux ï¿½lï¿½ments 
 	creer(Scoord, nb_ns, T, TS, nb_nf);
 		
 	delete[] Scoord;
@@ -1014,7 +1014,7 @@ void MaillageSubdivision::subdivision_sqrt3()
 void MaillageSubdivision::subdivision_loop()
 {
 	////-----------------------------------------------------------------------
-	// tester la triangularité
+	// tester la triangularitï¿½
 	if (!n_angulaire(3))
 	{
 		cerr << "MaillageSubdivision::subdivision_loop() :";
@@ -1032,25 +1032,25 @@ void MaillageSubdivision::subdivision_loop()
 	nb_nt = 4*nb_face;
 	
 	////-----------------------------------------------------------------------
-	//// création des nouveaux sommets
-	//// chaque nouveau sommet d'indice k est lié à l'élément existant
+	//// crï¿½ation des nouveaux sommets
+	//// chaque nouveau sommet d'indice k est liï¿½ ï¿½ l'ï¿½lï¿½ment existant
 	//// au moyen de sa marque
 	ULONG k;
 	
-	// création d'un nouveau sommet pour chaque sommet 
-	// indice de 0 à nb_sommet-1
+	// crï¿½ation d'un nouveau sommet pour chaque sommet 
+	// indice de 0 ï¿½ nb_sommet-1
 	k = 0;
 	for (PtrSommet s1 = s_first; s1 != SOMMET_NONE; s1 = s1->suiv)
 		s1->marque(k++); 
 		
-	// création d'un nouveau sommet pour chaque arete
-	// indice de nb_sommet à nb_sommet+nb_arete-1
+	// crï¿½ation d'un nouveau sommet pour chaque arete
+	// indice de nb_sommet ï¿½ nb_sommet+nb_arete-1
 	k = nb_sommet;
 	for (PtrArete a1 = a_first; a1 != ARETE_NONE; a1 = a1->suiv)
 		a1->marque(k++); 
 		
 	////-----------------------------------------------------------------------
-	//// création du tableau des coordonnées des sommets 
+	//// crï¿½ation du tableau des coordonnï¿½es des sommets 
 	Point3D *Scoord;
 	try {
 		Scoord = new Point3D[nb_ns];
@@ -1062,7 +1062,7 @@ void MaillageSubdivision::subdivision_loop()
 		exit(1);
 	}
 	
-	// coordonnées des nouveaux sommets correspondants aux sommets existants 	
+	// coordonnï¿½es des nouveaux sommets correspondants aux sommets existants 	
 	for (PtrSommet s1 = s_first; s1 != SOMMET_NONE; s1 = s1->suiv)
 	{
 		lAretes las1 = s1->aretes();
@@ -1093,7 +1093,7 @@ void MaillageSubdivision::subdivision_loop()
 		Scoord[k] = C;
 	}
 	
-	// coordonnées des nouveaux sommets correspondants aux aretes existantes 	
+	// coordonnï¿½es des nouveaux sommets correspondants aux aretes existantes 	
 	for (PtrArete a1 = a_first; a1 != ARETE_NONE; a1 = a1->suiv)
 	{
 		Point3D C;
@@ -1109,7 +1109,7 @@ void MaillageSubdivision::subdivision_loop()
 	}
 	
 	////-----------------------------------------------------------------------
-	//// création des tableaux des nouvelles faces 
+	//// crï¿½ation des tableaux des nouvelles faces 
 	ULONG tailleT = 3*nb_nt;
 	ULONG *T;
 	ULONG *TS;
@@ -1137,7 +1137,7 @@ void MaillageSubdivision::subdivision_loop()
 
 	TS[0] = 0;
 	
-	// pour chaque face existante, créer une nouvelle face
+	// pour chaque face existante, crï¿½er une nouvelle face
 	for (PtrFace f1 = f_first; f1 != FACE_NONE; f1 = f1->suiv)
 	{
 		PtrArete a1,a2,a3;
@@ -1148,7 +1148,7 @@ void MaillageSubdivision::subdivision_loop()
 		TS[kTS+1] = TS[kTS]+3; kTS++;
 	}
 	
-	// pour chaque sommet, créer une nouvelle face pour chaque face incidente
+	// pour chaque sommet, crï¿½er une nouvelle face pour chaque face incidente
 	for (PtrSommet s1 = s_first; s1 != SOMMET_NONE; s1 = s1->suiv)
 	{
 		ULONG is1 = s1->marque(); 
@@ -1190,10 +1190,10 @@ void MaillageSubdivision::subdivision_loop()
 	////-----------------------------------------------------------------------
 	//// modification de la structure 
 	
-	// destruction des éléments existants
+	// destruction des ï¿½lï¿½ments existants
 	supprimer_elements();
 	
-	// création des nouveaux éléments 
+	// crï¿½ation des nouveaux ï¿½lï¿½ments 
 	creer(Scoord, nb_ns, T, TS, nb_nt);
 		
 	delete[] Scoord;
@@ -1207,7 +1207,7 @@ void MaillageSubdivision::subdivision_loop()
 void MaillageSubdivision::subdivision_butterfly()
 {
 	////-----------------------------------------------------------------------
-	// tester la triangularité
+	// tester la triangularitï¿½
 	if (!n_angulaire(3))
 	{
 		cerr << "MaillageSubdivision::subdivision_butterfly() :";
@@ -1225,25 +1225,25 @@ void MaillageSubdivision::subdivision_butterfly()
 	nb_nt = 4*nb_face;
 	
 	////-----------------------------------------------------------------------
-	//// création des nouveaux sommets
-	//// chaque nouveau sommet d'indice k est lié à l'élément existant
+	//// crï¿½ation des nouveaux sommets
+	//// chaque nouveau sommet d'indice k est liï¿½ ï¿½ l'ï¿½lï¿½ment existant
 	//// au moyen de sa marque
 	ULONG k;
 	
-	// création d'un nouveau sommet pour chaque sommet 
-	// indice de 0 à nb_sommet-1
+	// crï¿½ation d'un nouveau sommet pour chaque sommet 
+	// indice de 0 ï¿½ nb_sommet-1
 	k = 0;
 	for (PtrSommet s1 = s_first; s1 != SOMMET_NONE; s1 = s1->suiv)
 		s1->marque(k++); 
 		
-	// création d'un nouveau sommet pour chaque arete
-	// indice de nb_sommet à nb_sommet+nb_arete-1
+	// crï¿½ation d'un nouveau sommet pour chaque arete
+	// indice de nb_sommet ï¿½ nb_sommet+nb_arete-1
 	k = nb_sommet;
 	for (PtrArete a1 = a_first; a1 != ARETE_NONE; a1 = a1->suiv)
 		a1->marque(k++); 
 		
 	////-----------------------------------------------------------------------
-	//// création du tableau des coordonnées des sommets 
+	//// crï¿½ation du tableau des coordonnï¿½es des sommets 
 	Point3D *Scoord;
 	try {
 		Scoord = new Point3D[nb_ns];
@@ -1255,14 +1255,14 @@ void MaillageSubdivision::subdivision_butterfly()
 		exit(1);
 	}
 	
-	// coordonnées des nouveaux sommets correspondants aux sommets existants 	
+	// coordonnï¿½es des nouveaux sommets correspondants aux sommets existants 	
 	for (PtrSommet s1 = s_first; s1 != SOMMET_NONE; s1 = s1->suiv)
 	{
 		k = s1->marque();
 		Scoord[k] = s1->coord();
 	}
 	
-	// coordonnées des nouveaux sommets correspondants aux aretes existantes 	
+	// coordonnï¿½es des nouveaux sommets correspondants aux aretes existantes 	
 	for (PtrArete a1 = a_first; a1 != ARETE_NONE; a1 = a1->suiv)
 	{
 		Point3D C;
@@ -1313,7 +1313,7 @@ void MaillageSubdivision::subdivision_butterfly()
 	}
 	
 	////-----------------------------------------------------------------------
-	//// création des tableaux des nouvelles faces 
+	//// crï¿½ation des tableaux des nouvelles faces 
 	ULONG tailleT = 3*nb_nt;
 	ULONG *T;
 	ULONG *TS;
@@ -1341,7 +1341,7 @@ void MaillageSubdivision::subdivision_butterfly()
 
 	TS[0] = 0;
 	
-	// pour chaque face existante, créer une nouvelle face
+	// pour chaque face existante, crï¿½er une nouvelle face
 	for (PtrFace f1 = f_first; f1 != FACE_NONE; f1 = f1->suiv)
 	{
 		PtrArete a1,a2,a3;
@@ -1352,7 +1352,7 @@ void MaillageSubdivision::subdivision_butterfly()
 		TS[kTS+1] = TS[kTS]+3; kTS++;
 	}
 	
-	// pour chaque sommet, créer une nouvelle face pour chaque face incidente
+	// pour chaque sommet, crï¿½er une nouvelle face pour chaque face incidente
 	for (PtrSommet s1 = s_first; s1 != SOMMET_NONE; s1 = s1->suiv)
 	{
 		ULONG is1 = s1->marque(); 
@@ -1394,10 +1394,10 @@ void MaillageSubdivision::subdivision_butterfly()
 	////-----------------------------------------------------------------------
 	//// modification de la structure 
 	
-	// destruction des éléments existants
+	// destruction des ï¿½lï¿½ments existants
 	supprimer_elements();
 	
-	// création des nouveaux éléments 
+	// crï¿½ation des nouveaux ï¿½lï¿½ments 
 	creer(Scoord, nb_ns, T, TS, nb_nt);
 		
 	delete[] Scoord;
