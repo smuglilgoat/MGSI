@@ -99,7 +99,7 @@ vec3 materialSpecularColor(1., .1, 1); // couleur du materiau
 //-----------
 vec3 LightPosition(1., 0., .5);
 vec3 LightIntensities(1., 1., 1.); // couleur la lumiere
-vec3 objectColor(1., 0., 0.); // couleur de l'objet
+vec3 objectColor(1., 0., 0.);      // couleur de l'objet
 GLfloat LightAttenuation = 1.;
 GLfloat LightAmbientCoefficient = .1;
 
@@ -251,7 +251,7 @@ void initOpenGL(void)
   locmaterialSpecularColor = glGetUniformLocation(programID, "materialSpecularColor");
   locLightPosition = glGetUniformLocation(programID, "lightPosition");
   locLightIntensities = glGetUniformLocation(programID, "lightIntensities"); // a.k.a the color of the light
-  locObjectColor = glGetUniformLocation(programID, "objectColor"); // a.k.a the color of the object
+  locObjectColor = glGetUniformLocation(programID, "objectColor");           // a.k.a the color of the object
   locLightAttenuation = glGetUniformLocation(programID, "light.attenuation");
   locLightAmbientCoefficient = glGetUniformLocation(programID, "light.ambientCoefficient");
 }
@@ -267,7 +267,7 @@ int main(int argc, char **argv)
   glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB);
   glutInitWindowPosition(200, 200);
   glutInitWindowSize(screenWidth, screenHeight);
-  glutCreateWindow("TORE TOON SHADER + SILHOUETTE");
+  glutCreateWindow("TORE TOON/GOOCH SHADER + SILHOUETTE");
 
   // Initialize GLEW
   if (glewInit() != GLEW_OK)
@@ -373,7 +373,7 @@ void affichage()
 
   /* effacement de l'image avec la couleur de fond */
   /* Initialisation d'OpenGL */
-  glClearColor(0.5,0.5,0.5, 1.0);
+  glClearColor(0.5, 0.5, 0.5, 1.0);
   glClearDepth(10.0f); // 0 is near, >0 is far
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glColor3f(0.0, 0.0, 0.0);
@@ -406,7 +406,7 @@ void traceObjet()
 
   // on envoie les données necessaires aux shaders */
   glUniformMatrix4fv(MatrixIDMVP, 1, GL_FALSE, &MVP[0][0]);
-  glUniformMatrix4fv(MatrixIDView, 1, GL_FALSE,&View[0][0]);
+  glUniformMatrix4fv(MatrixIDView, 1, GL_FALSE, &View[0][0]);
   glUniformMatrix4fv(MatrixIDModel, 1, GL_FALSE, &Model[0][0]);
   glUniformMatrix4fv(MatrixIDPerspective, 1, GL_FALSE, &Projection[0][0]);
 
