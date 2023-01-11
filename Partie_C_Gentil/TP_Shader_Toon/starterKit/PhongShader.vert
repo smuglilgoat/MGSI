@@ -5,7 +5,7 @@ uniform mat4 MVP;
 uniform mat4 MODEL;
 
 layout(location = 0) in vec3 position; // le location permet de dire de quel flux/canal on récupère les données (doit être en accord avec le location du code opengl)
-layout(location = 2) in vec3 aNormal;
+layout(location = 3) in vec3 aNormal;
 
 out vec3 normal;
 out vec3 fragPosition;

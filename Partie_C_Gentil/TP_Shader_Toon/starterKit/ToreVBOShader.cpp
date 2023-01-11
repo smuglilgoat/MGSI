@@ -267,7 +267,7 @@ int main(int argc, char **argv)
   glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB);
   glutInitWindowPosition(200, 200);
   glutInitWindowSize(screenWidth, screenHeight);
-  glutCreateWindow("CUBE VBO SHADER ");
+  glutCreateWindow("TORE TOON SHADER + SILHOUETTE");
 
   // Initialize GLEW
   if (glewInit() != GLEW_OK)
@@ -373,10 +373,10 @@ void affichage()
 
   /* effacement de l'image avec la couleur de fond */
   /* Initialisation d'OpenGL */
-  glClearColor(0.0, 0.0, 0.0, 0.0);
+  glClearColor(0.5,0.5,0.5, 1.0);
   glClearDepth(10.0f); // 0 is near, >0 is far
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glColor3f(1.0, 1.0, 1.0);
+  glColor3f(0.0, 0.0, 0.0);
   glPointSize(2.0);
 
   View = glm::lookAt(cameraPosition,     // Camera is at (0,0,3), in World Space
