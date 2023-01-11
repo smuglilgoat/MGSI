@@ -233,7 +233,7 @@ void initOpenGL(void)
   glEnable(GL_CULL_FACE); // on active l'élimination des faces qui par défaut n'est pas active
   glEnable(GL_DEPTH_TEST);
   // le shader
-  programID = LoadShaders("PhongShader.vert", "PhongShader.frag");
+  programID = LoadShaders("GoochShader.vert", "GoochShader.frag");
 
   // Get  handles for our matrix transformations "MVP" VIEW  MODELuniform
   MatrixIDMVP = glGetUniformLocation(programID, "MVP");
