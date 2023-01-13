@@ -24,8 +24,8 @@ void main() {
     vec3 WarmColor = vec3(0.6, 0.6, 0);
 
     NdotL = (dot(lightDir, norm) + 1.0) * 0.5;
-    vec3 kcool    = min(CoolColor + objectColor, 1.0);
-    vec3 kwarm    = min(WarmColor + objectColor, 1.0); 
+    vec3 kcool    = min(CoolColor, 1.0);
+    vec3 kwarm    = min(WarmColor, 1.0); 
     vec3 kfinal   = mix(kcool, kwarm, NdotL);
 
     finalColor = vec4(kfinal, 1.0);
