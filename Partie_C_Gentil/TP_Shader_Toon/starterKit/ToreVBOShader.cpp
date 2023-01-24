@@ -8,10 +8,14 @@
 /* inclusion des fichiers d'en-tete Glut */
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include <iomanip>
 #include <cstdlib>
 #include <stdlib.h>
 #include <stdio.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+#include <vector>
 
 #include <GL/glew.h>
 #include <GL/freeglut.h>
@@ -210,21 +214,46 @@ GLubyte *glmReadPPM(char *filename, int *width, int *height)
 void initTexture(void)
 //-----------------------------------------
 {
-  int iwidth, iheight;
-  GLubyte *image = NULL;
+  vector<std::string> faces
+    {
+        "texture/right.jpg",
+        "texture/left.jpg",
+        "texture/top.jpg",
+        "texture/bottom.jpg",
+        "texture/front.jpg",
+        "texture/back.jpg"
+    };
 
-  image = glmReadPPM("../texture/Metalcolor.ppm", &iwidth, &iheight);
   glGenTextures(1, &bufTexture);
-  glBindTexture(GL_TEXTURE_2D, bufTexture);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexImage2D(GL_TEXTURE_2D, 0, 3, iwidth, iheight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, bufTexture);
 
-  locationTexture = glGetUniformLocation(programID, "myTextureSampler"); // et il y a la texture elle même
-                                                                         //   glBindAttribLocation(programID,indexUVTexture,"vertexUV");	// il y a les coord UV
+  int width, height, nrChannels;
+    for (unsigned int i = 0; i < faces.size(); i++)
+    {
+        unsigned char *data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
+        if (data)
+        {
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+            stbi_image_free(data);
+        }
+        else
+        {
+            std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
+            stbi_image_free(data);
+        }
+    }
+
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE); 
+
+  locationTexture = glGetUniformLocation(programID, "texMap");
+  //glBindAttribLocation(programID,indexUVTexture,"vertexUV");	// il y a les coord UV
 }
+
+
 //----------------------------------------
 void initOpenGL(void)
 //----------------------------------------
@@ -233,7 +262,7 @@ void initOpenGL(void)
   glEnable(GL_CULL_FACE); // on active l'élimination des faces qui par défaut n'est pas active
   glEnable(GL_DEPTH_TEST);
   // le shader
-  programID = LoadShaders("GoochShader.vert", "GoochShader.frag");
+  programID = LoadShaders("EnvMapShader.vert", "EnvMapShader.frag");
 
   // Get  handles for our matrix transformations "MVP" VIEW  MODELuniform
   MatrixIDMVP = glGetUniformLocation(programID, "MVP");
@@ -418,6 +447,7 @@ void traceObjet()
   glUniform3f(locObjectColor, objectColor.x, objectColor.y, objectColor.z);
   glUniform1f(locLightAttenuation, LightAttenuation);
   glUniform1f(locLightAmbientCoefficient, LightAmbientCoefficient);
+  glUniform1i(locationTexture, 1); 
 
   // pour l'affichage
   glBindVertexArray(VAO);                                            // on active le VAO

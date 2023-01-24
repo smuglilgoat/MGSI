@@ -3,8 +3,8 @@ CXX=g++
 CFLAGS=-Wall -I/urs/local/include
 CFLAGS=
 #LDFLAGS= -lGL -lGLEW -lGLU -lglut  -larmadillo
-#LDFLAGS= -lGL -lGLU -lGLEW -lglut -lm 
-LDFLAGS= -lGL -lGLU -lGLEW -lSDL -lglut  
+LDFLAGS= -lGL -lGLU -lGLEW -lglut -lm 
+#LDFLAGS= -lGL -lGLU -lGLEW -lSDL -lglut  
 
 #SRC=saisieinteractive.cpp courbe.cpp
 SRC=$(wildcard *.$(EXT)) 
