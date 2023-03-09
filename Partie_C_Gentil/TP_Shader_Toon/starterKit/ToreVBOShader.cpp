@@ -291,7 +291,6 @@ int main(int argc, char **argv)
 
   /* initialisation de glut et creation
      de la fenetre */
-
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB);
   glutInitWindowPosition(200, 200);
@@ -306,12 +305,11 @@ int main(int argc, char **argv)
   }
 
   // info version GLSL
-  std::cout << "***** Info GPU *****" << std::endl;
-  std::cout << "Fabricant : " << glGetString(GL_VENDOR) << std::endl;
-  std::cout << "Carte graphique: " << glGetString(GL_RENDERER) << std::endl;
-  std::cout << "Version : " << glGetString(GL_VERSION) << std::endl;
-  std::cout << "Version GLSL : " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl
-            << std::endl;
+  printf("***** GPU INFO *****");
+	printf("Graphic card vendor: %s\n", glGetString(GL_VENDOR));
+	printf("Renderer: %s\n", glGetString(GL_RENDERER));
+	printf("GL version: %s\n", glGetString(GL_VERSION));
+	printf("GLSL version: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
   initOpenGL();
 

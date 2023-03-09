@@ -1,4 +1,4 @@
-#version 450
+#version 410
 uniform mat4 MVP;
 uniform mat4 MODEL;
 
